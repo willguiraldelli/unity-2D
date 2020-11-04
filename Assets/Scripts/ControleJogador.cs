@@ -13,6 +13,10 @@ public class ControleJogador : MonoBehaviour
     public Transform camera;
     public float minimoCameraX;
     public float maximoCameraX;
+    public float minimoCameraY;
+    public float maximoCameraY;
+    public GameObject fireball;
+    public GameObject sons;
 
     void Start()
     {
@@ -27,16 +31,27 @@ public class ControleJogador : MonoBehaviour
         // minimo 
         // maximo 
         float camx = rig.transform.position.x + 3;
-        if (camx < minimoCameraX)
-        {
+
+        if (camx < minimoCameraX){
             camx = minimoCameraX;
         }
-        if (camx > maximoCameraX)
-        {
+
+        if (camx > maximoCameraX){
             camx = maximoCameraX;
         }
-        camera.position = new Vector3(camx, 0, -10);
-   
+
+
+        float camy = rig.transform.position.y + 3;
+        if (camy < minimoCameraY){
+            camy = minimoCameraY;
+        }
+
+        if (camy > maximoCameraY){
+            camy = maximoCameraY;
+        }
+
+        camera.position = new Vector3(camx, camy, -10);
+
         // pega o valor da seta do teclado (1-direita / -1=esquerda)
         float mov = Input.GetAxisRaw("Horizontal");
 
@@ -61,6 +76,7 @@ public class ControleJogador : MonoBehaviour
             rig.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             pulando = true;
             animator.SetBool("Pulando", true);
+            sons.GetComponents<AudioSource>()[3].Play();
         }
 
         // deslizando
@@ -74,6 +90,17 @@ public class ControleJogador : MonoBehaviour
         {
             abaixando = false;
             animator.SetBool("Abaixando", false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {             sons.GetComponents<AudioSource>()[4].Play();
+             float fx;             float movFire;             bool flipFire;             if (GetComponent<SpriteRenderer>().flipX)
+            {                 movFire = -3F;                 fx = rig.transform.position.x - 2;
+                flipFire = false;             }
+            else
+            {                 movFire = 3F;                 fx = rig.transform.position.x + 2;
+                flipFire = true;             }
+            float fy = rig.transform.position.y + 0.5F;             float fz = rig.transform.position.z;             GameObject novo = Instantiate(fireball, new Vector3(fx, fy, fz), Quaternion.identity);             novo.GetComponent<ControleFireball>().mov = movFire;             novo.GetComponent<SpriteRenderer>().flipX = flipFire;
         }
 
     }
