@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ControleJogador : MonoBehaviour
 {
@@ -17,11 +18,16 @@ public class ControleJogador : MonoBehaviour
     public float maximoCameraY;
     public GameObject fireball;
     public GameObject sons;
+    public GameObject moeda;
+    public Text txtPontos;
+    private int pontos = 0;
 
     void Start()
     {
         rig = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        txtPontos.text = "Points: " + pontos;
     }
 
     // Update is called once per frame
@@ -106,6 +112,13 @@ public class ControleJogador : MonoBehaviour
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.CompareTag("Coin"))
+        {
+            Destroy(collision.gameObject);
+            pontos++;
+            txtPontos.text = "" + pontos;
+        }
+
         pulando = false;
         animator.SetBool("Pulando", false);
         animator.SetBool("Abaixando", false);
